@@ -53,10 +53,59 @@ void sort(pNode L)
   }
 }
 
-void insert(pNode L, int index, int val) {}
-
-void delete (pNode L, int index, int val)
+bool insert(pNode L, int index, int val)
 {
+
+  int i = 0;
+  pNode p = L;
+
+  while (p != NULL && i < index)
+  {
+    p = p->pNext;
+    i++;
+  }
+  // p 是最后一个节点
+  if (p == NULL || i > index)
+  {
+    return false;
+  }
+
+  pNode pNew = (pNode)malloc(sizeof(NODE));
+
+  if (pNew == NULL)
+  {
+    printf("动态内存分配失败");
+    exit(-1);
+  }
+
+  pNew->data = val;
+  pNode q = p->pNext;
+  p->pNext = pNew;
+  pNew->pNext = q;
+}
+
+int delete (pNode L, int index, int *val)
+{
+  int i = 0;
+  pNode p = L;
+
+  while (p != NULL && i < index)
+  {
+    p = p->pNext;
+    i++;
+  }
+  // p 是最后一个节点
+  if (p == NULL || p->pNext == NULL)
+  {
+    return false;
+  }
+
+  pNode q = p->pNext;
+  *val = q->data;
+  p->pNext = p->pNext->pNext;
+  free(q);
+  q = NULL;
+  return true;
 }
 
 // 返回一个指针变量
@@ -119,10 +168,19 @@ int main(void)
 {
   pNode pHead = NULL; // 创建一个链表的指针变量
   pHead = init();
-  sort(pHead);
+  // sort(pHead);
+  // insert(pHead, 0, 22);
+  int val;
+  if (delete (pHead, 4, &val))
+  {
+    printf("删除的元素是 %d\n", val);
+  }
+  else
+  {
+    printf("删除失败 ");
+  }
   traverse(pHead);
-
-  printf("%d\n", Length(pHead));
+  printf("长度是 %d\n", Length(pHead));
 
   return 0;
 }
